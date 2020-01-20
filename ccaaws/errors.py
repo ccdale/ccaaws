@@ -1,5 +1,5 @@
 """
-errors module for Iam Report application
+errors module for ccaaws module
 """
 import sys
 

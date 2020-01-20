@@ -1,8 +1,8 @@
 import sys
 from datetime import datetime
 import ccalogging
-from iamreport.errors import errorRaise
-from iamreport.botosession import BotoSession
+from ccaaws.errors import errorRaise
+from ccaaws.botosession import BotoSession
 
 log = ccalogging.log
 
