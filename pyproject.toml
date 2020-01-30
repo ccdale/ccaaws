@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "ccaaws"
-version = "0.1.0"
-description = "AWS objects for python"
-authors = ["ccdale <chris.allison@hivehome.com>"]
+version = "0.1.1"
+description = "AWS boto3 objects for python"
+authors = ["ccdale <chris.charles.allison+ccaaws@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.6"
