@@ -1,5 +1,8 @@
+""" ccaaws cloudformation class
+"""
 import sys
 import time
+from ccaaws import __version__
 from ccaaws.botosession import BotoSession
 from ccaaws.errors import errorRaise
 from botocore.exceptions import ClientError
@@ -93,6 +96,25 @@ class CFNClient(BotoSession):
             fname = sys._getframe().f_code.co_name
             errorRaise(fname, e)
 
+    def checkStack(self, stack):
+        ok = False
+        log.debug(f"checking stack: {stack}")
+        if "StackStatus" in stack:
+            log.debug("status is in stack")
+            if stack["StackStatus"] in ["UPDATE_COMPLETE", "CREATE_COMPLETE"]:
+                log.debug("is one of the updates")
+                if "Tags" in stack:
+                    log.debug("stack has tags")
+                    for tag in stack["Tags"]:
+                        if tag["Key"] == "version":
+                            log.debug(
+                                f"""version tag: {tag["Value"]}, version: {__version__}"""
+                            )
+                            if tag["Value"] == __version__:
+                                log.debug("version tag is correct")
+                                ok = True
+        return ok
+
     def expandDictToList(self, xdict, keyname="Key", valuename="Value"):
         """ expands a dictionary into a list of dictionaries, one per key
 
@@ -122,7 +144,6 @@ class CFNClient(BotoSession):
                     "owner": "sre",
                     "environment": "prod",
                     "product": "ccaaws",
-                    "version": __version__,
                 }
 
         returns a list of dictionaries
@@ -130,47 +151,119 @@ class CFNClient(BotoSession):
                 {"Key": "owner", "Value": "sre"},
                 {"Key": "environment", "Value": "prod"},
                 {"Key": "product", "Value": "ccaaws"},
-                {"Key": "version", "Value": __version__},
             ]
         """
         try:
+            tagdict["version"] = __version__
+            tagdict["builder"] = "ccaaws"
             return self.expandDictToList(tagdict)
         except Exception as e:
             fname = sys._getframe().f_code.co_name
             errorRaise(fname, e)
 
-    def buildStackParams(self, paramstr):
+    def buildStackParams(self, paramdict):
         """ builds a set of parameters from a paramstring
         """
         try:
-            pd = self.makeParamDict(paramstr)
             lpd = self.expandDictToList(
-                pd, keyname="ParameterKey", valuename="ParameterValue"
+                paramdict, keyname="ParameterKey", valuename="ParameterValue"
             )
             return lpd
         except Exception as e:
             fname = sys._getframe().f_code.co_name
             errorRaise(fname, e)
 
-    def makeParamDictFromString(self, strparams):
-        """ makes a dictionary from a string of parameters
+    def testParam(
+        self,
+        param,
+        options,
+        testlist=False,
+        teststr=False,
+        testint=False,
+        testdict=False,
+    ):
+        if param in options and options[param] is not None:
+            if testlist:
+                return True if type(options[param]) is list else False
+            elif teststr:
+                return True if type(options[param]) is str else False
+            elif testint:
+                return True if type(options[param]) is int else False
+            elif testdict:
+                return True if type(options[param]) is dict else False
+            else:
+                return True
+        return False
 
-        params:
-          strparams: a string in the form:
-                'someparam=somevalue,someotherparam=someothervalue'
+    def buildStackDict(self, options):
+        """ sets up the stack 'dictionary' for the create/update stack functions
 
-        returns a dictionary:
-           {"someparam": somevalue, "someotherparam": someothervalue}
+        param: options
+               a dictionary of required options for the stack
+                "templatefn": fqfn of the yaml or json template for the stack
+                "stackname": the name of the stack
+                "params"(optional): the parameters of the stack in string form
+                          'param1=val1,param2=val2'
+                    or dict form:
+                          {"param1": "val1", "param2": "val2"}
+                "tags"(optional): the stack tags in dict form
+                "capabilities"(optional): ["CAPABILITY_IAM"] or ["CAPABILITY_NAMED_IAM"]
+
+        returns a dictionary ready for the stack create/update functions
         """
         try:
-            return UT.makeDictFromString(strparams)
+            template = UT.readFile(options["templatefn"])
+            if template is None:
+                raise Exception(f"""Failed to read {options["templatefn"]}""")
+            xd = {"StackName": options["stackname"], "TemplateBody": template}
+            if self.testParam("params", options, teststr=True):
+                pd = UT.makeDictFromString(options["params"])
+                xd["Parameters"] = self.buildStackParams(pd)
+            elif self.testParam("params", options, testdict=True):
+                xd["Parameters"] = self.buildStackParams(options["params"])
+            if self.testParam("tags", options, testdict=True):
+                xd["Tags"] = self.buildStackTags(options["tags"])
+            else:
+                xd["Tags"] = self.buildStackTags({})
+            if self.testParam("capabilities", options, testlist=True):
+                if len(options["capabilities"]) > 0:
+                    xd["Capabilities"] = options["capabilities"]
+            return xd
         except Exception as e:
             fname = sys._getframe().f_code.co_name
             errorRaise(fname, e)
 
-    def getTemplate(self, fqfn):
+    def installOrUpdateStack(self, options):
+        """ installs a stack if it doesn't exist or updates it
+
+        param options: as for the buildStackDict function above
+
+        returns stack status or None
+        """
         try:
-            return UT.readFile(fqfn)
+            status = self.waitForStack(options["stackname"])
+            xd = self.buildStackDict(options)
+            if status is not None and "COMPLETE" in status:
+                if not self.checkStack(self.stackDetails(options["stackname"])):
+                    # stack exists, so update it
+                    log.warning(f"""updating stack {options["stackname"]}""")
+                    self.updateStack(**xd)
+                    time.sleep(10)
+                    status = self.waitForStack(options["stackname"])
+                else:
+                    log.info(f"""Stack {options["stackname"]} is up to date""")
+            elif status is None:
+                log.info(f"""creating stack {options["stackname"]}""")
+                self.createStack(**xd)
+                time.sleep(10)
+                status = self.waitForStack(options["stackname"])
+            else:
+                msg = f"""stack {options["stackname"]} is status: {status}"""
+                log.warning(msg)
+                raise Exception(msg)
+        except ClientError as ce:
+            log.warning("Client Error: stack probably already up to date")
+            log.warning(f"{ce}")
         except Exception as e:
             fname = sys._getframe().f_code.co_name
-            errorRaise(fname, e)
+            errorExit(fname, e)
