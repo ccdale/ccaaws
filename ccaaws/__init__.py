@@ -5,6 +5,7 @@ version key.
 """
 
 import os
+import toml
 
 __version__ = "0.0.0"
 
@@ -14,16 +15,8 @@ dird = os.path.dirname(__file__)
 while dird != "/" or dird != "":
     pfn = os.path.join(dird, "pyproject.toml")
     if os.path.exists(pfn):
-        with open(pfn, "r") as f:
-            for line in f:
-                if line.startswith("version"):
-                    tmp = line.split("=")
-                    vtmp = tmp[1].strip().split('"')
-                    if len(vtmp) > 1:
-                        __version__ = vtmp[1]
-                    else:
-                        __version__ = vtmp[0]
-                    break
+        td = toml.load(pfn)
+        __version__ = td["tool"]["poetry"]["version"]
         break
     else:
         dird = os.path.dirname(dird)
