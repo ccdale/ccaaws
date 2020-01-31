@@ -5,7 +5,8 @@ import sys
 
 
 def formatErrorMsg(funcname, exc):
-    return "Error in {}: Exception: {}: {}\n".format(funcname, type(exc).__name__, exc)
+    ename = type(exc).__name__
+    return f"Error in {funcname}: {ename}: {exc}\n"
 
 
 def errorExit(funcname, exc, errorvalue=1):
