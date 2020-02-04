@@ -3,7 +3,7 @@
 import sys
 from ccaaws import __version__
 from ccaaws.botosession import BotoSession
-from ccaaws.errors import errorRaise
+from ccautils.errors import errorRaise
 import ccalogging
 
 log = ccalogging.log
@@ -30,9 +30,11 @@ class EC2(BotoSession):
             while True:
                 resp = self.client.describe_instances(**kwargs)
                 try:
-                    # either of these should trigger the KeyError
-                    # exception when we get to the end of the list
-                    instances.append(resp["Reservations"]["Instances"])
+                    if "Reservations" in resp:
+                        for r in resp["Reservations"]:
+                            if "Instances" in r:
+                                for i in r["Instances"]:
+                                    instances.append(i)
                     kwargs["NextToken"] = resp["NextToken"]
                 except KeyError:
                     break

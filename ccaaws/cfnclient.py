@@ -4,10 +4,11 @@ import sys
 import time
 from ccaaws import __version__
 from ccaaws.botosession import BotoSession
-from ccaaws.errors import errorRaise
 from botocore.exceptions import ClientError
 import ccalogging
-import ccaaws.utils as UT
+import ccautils.utils as UT
+import ccautils.fileutils as FT
+from ccautils.errors import errorRaise
 
 log = ccalogging.log
 
@@ -212,7 +213,7 @@ class CFNClient(BotoSession):
         returns a dictionary ready for the stack create/update functions
         """
         try:
-            template = UT.readFile(options["templatefn"])
+            template = FT.readFile(options["templatefn"])
             if template is None:
                 raise Exception(f"""Failed to read {options["templatefn"]}""")
             xd = {"StackName": options["stackname"], "TemplateBody": template}

@@ -3,7 +3,7 @@
 import sys
 import datetime
 from ccaaws.botosession import BotoSession
-from ccaaws.errors import errorRaise
+from ccautils.errors import errorRaise
 import ccalogging
 
 log = ccalogging.log
