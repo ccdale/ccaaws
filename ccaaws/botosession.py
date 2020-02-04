@@ -36,9 +36,10 @@ class BotoSession:
         self.usekeys = False
         self.kwargs = None
         self.usedefault = True
+        if "region" in kwargs:
+            self.region = kwargs["region"]
+            del kwargs["region"]
         if len(kwargs) > 0:
-            if "region" in kwargs:
-                self.region = kwargs["region"]
             if "profile" in kwargs:
                 self.profile = kwargs["profile"]
             elif "accesskey" in kwargs and "secretkey" in kwargs:
