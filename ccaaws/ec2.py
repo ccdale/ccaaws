@@ -42,3 +42,19 @@ class EC2(BotoSession):
         except Exception as e:
             fname = sys._getframe().f_code.co_name
             errorRaise(fname, e)
+
+    def getRegions(self):
+        """
+        returns a list of all available regions
+        """
+        try:
+            regions = []
+            resp = self.client.describe_regions()
+            if "Regions" in resp:
+                for region in resp["Regions"]:
+                    regions.append(region["RegionName"])
+            log.debug("Regions: {}".format(regions))
+            return regions
+        except Exception as e:
+            fname = sys._getframe().f_code.co_name
+            errorRaise(fname, e)
