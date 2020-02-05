@@ -25,6 +25,7 @@ class EC2(BotoSession):
         """
         try:
             instances = []
+            kwargs = {}
             kwargs["InstanceIds"] = instlist
             while True:
                 resp = self.client.describe_instances(**kwargs)
