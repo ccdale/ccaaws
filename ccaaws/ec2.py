@@ -4,6 +4,7 @@ import sys
 from ccaaws import __version__
 from ccaaws.botosession import BotoSession
 from ccautils.errors import errorRaise
+from botocore.exceptions import ClientError
 import ccalogging
 
 log = ccalogging.log
