@@ -39,10 +39,11 @@ class BotoSession:
         if "region" in kwargs:
             self.region = kwargs["region"]
             del kwargs["region"]
+        if "profile" in kwargs:
+            self.profile = kwargs["profile"]
+            del kwargs["profile"]
         if len(kwargs) > 0:
-            if "profile" in kwargs:
-                self.profile = kwargs["profile"]
-            elif "accesskey" in kwargs and "secretkey" in kwargs:
+            if "accesskey" in kwargs and "secretkey" in kwargs:
                 self.kwargs = {}
                 if self.region is not None:
                     self.kwargs["region_name"] = self.region
@@ -52,6 +53,8 @@ class BotoSession:
                     self.kwargs["aws_session_token"] = kwargs["stoken"]
                 self.usekeys = True
                 self.usedefault = False
+                # access keys override profiles
+                self.profile = None
             else:
                 emsg = "Incomplete credentials supplied"
                 raise NoCreds(emsg)
