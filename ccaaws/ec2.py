@@ -28,16 +28,20 @@ class EC2(BotoSession):
             kwargs = {}
             kwargs["InstanceIds"] = instlist
             while True:
-                resp = self.client.describe_instances(**kwargs)
                 try:
-                    if "Reservations" in resp:
-                        for r in resp["Reservations"]:
-                            if "Instances" in r:
-                                for i in r["Instances"]:
-                                    instances.append(i)
-                    kwargs["NextToken"] = resp["NextToken"]
-                except KeyError:
-                    break
+                    # will raise client error if instances don't exist
+                    resp = self.client.describe_instances(**kwargs)
+                    try:
+                        if "Reservations" in resp:
+                            for r in resp["Reservations"]:
+                                if "Instances" in r:
+                                    for i in r["Instances"]:
+                                        instances.append(i)
+                        kwargs["NextToken"] = resp["NextToken"]
+                    except KeyError:
+                        break
+                except ClientError as ce:
+                    log.debug(f"ClientError: Instances probably don't exist: {ce}")
             return instances
         except Exception as e:
             fname = sys._getframe().f_code.co_name
