@@ -3,24 +3,26 @@
 from ccaaws.ec2 import EC2
 
 
-def test_findExistingInstance():
+@pytest.fixture
+def ec2object():
+    return EC2()
+
+
+def test_findExistingInstance(ec2object):
     # secadmin-prod sectools-prod-bastion
     iid = "i-0e0529a38e748906f"
-    ec = EC2()
-    insts = ec.findInstances([iid])
+    insts = ec2object.findInstances([iid])
     assert len(insts) == 1
 
 
-def test_findExistingInstances():
+def test_findExistingInstances(ec2object):
     # secadmin-prod sectools-prod-bastion
     iids = ["i-0e0529a38e748906f", "i-08c2d230b11860b70"]
-    ec = EC2()
-    insts = ec.findInstances(iids)
+    insts = ec2object.findInstances(iids)
     assert len(insts) == 2
 
 
-def test_findNonExistantInstance():
+def test_findNonExistantInstance(ec2object):
     iids = ["i-33333333333333333", "i-44444444444444444"]
-    ec = EC2()
-    insts = ec.findInstances(iids)
+    insts = ec2object.findInstances(iids)
     assert len(insts) == 0
