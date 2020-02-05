@@ -18,9 +18,36 @@ class EC2(BotoSession):
         super().__init__(**kwargs)
         self.newClient("ec2")
 
+    def findInstances(self, instlist):
+        """ find instances in instlist
+
+        instlist is a list of instance-id strings
+        """
+        try:
+            instances = []
+            kwargs["InstanceIds"] = instlist
+            while True:
+                resp = self.client.describe_instances(**kwargs)
+                try:
+                    if "Reservations" in resp:
+                        for r in resp["Reservations"]:
+                            if "Instances" in r:
+                                for i in r["Instances"]:
+                                    instances.append(i)
+                    kwargs["NextToken"] = resp["NextToken"]
+                except KeyError:
+                    break
+            return instances
+        except Exception as e:
+            fname = sys._getframe().f_code.co_name
+            errorRaise(fname, e)
+
     def getMatchingInstances(self, instlst=None):
         """ find the instances named in the `instlst` list
         or all instances if `instlst` is None
+
+        NOTE: this does not appear to work with filters, use
+        the 'findInstances' function above
         """
         try:
             instances = []
