@@ -43,6 +43,7 @@ class EC2(BotoSession):
                         break
                 except ClientError as ce:
                     log.debug(f"ClientError: Instances probably don't exist: {ce}")
+                    break
             return instances
         except Exception as e:
             fname = sys._getframe().f_code.co_name
