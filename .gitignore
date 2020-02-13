@@ -4,3 +4,8 @@
 build/
 package
 dist/
+.nox/
+docs/_build
+.coverage
+htmlcov
+coverage.xml

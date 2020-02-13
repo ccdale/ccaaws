@@ -1,7 +1,8 @@
-import nox
 import tempfile
 
-nox.options.sessions = ["lint"]
+import nox
+
+nox.options.sessions = "lint", "safety", "mypy"
 
 locations = "ccaaws", "noxfile.py", "tests"
 
@@ -78,3 +79,15 @@ def safety(session):
         )
         install_with_constraints(session, "safety")
         session.run("safety", "check", f"--file={requirements.name}", "--full-report")
+
+
+@nox.session(python=["3.8"])
+def mypy(session):
+    """Type checking with mypy.
+
+    Args:
+        session: the nox session
+    """
+    args = session.posargs or locations
+    install_with_constraints(session, "mypy")
+    session.run("mypy", *args)
