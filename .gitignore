@@ -10,3 +10,4 @@ docs/_build
 htmlcov
 coverage.xml
 .mypy*
+checkec2.py

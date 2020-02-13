@@ -2,13 +2,15 @@
 """
 import sys
 import time
-from ccaaws import __version__
-from ccaaws.botosession import BotoSession
+
 from botocore.exceptions import ClientError
 import ccalogging
-import ccautils.utils as UT
-import ccautils.fileutils as FT
 from ccautils.errors import errorRaise
+import ccautils.fileutils as FT
+import ccautils.utils as UT
+
+from ccaaws import __version__
+from ccaaws.botosession import BotoSession
 
 log = ccalogging.log
 
@@ -24,7 +26,7 @@ class CFNClient(BotoSession):
             if "Stacks" in resp:
                 stack = resp["Stacks"][0]
                 return stack
-        except ClientError as ce:
+        except ClientError:
             log.debug(f"stack: {stackname} does not exist")
             return None
         except Exception as e:
@@ -267,4 +269,4 @@ class CFNClient(BotoSession):
             log.warning(f"{ce}")
         except Exception as e:
             fname = sys._getframe().f_code.co_name
-            errorExit(fname, e)
+            errorRaise(fname, e)
