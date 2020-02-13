@@ -1,10 +1,12 @@
 """ CloudWatch client
 """
-import sys
 import datetime
-from ccaaws.botosession import BotoSession
-from ccautils.errors import errorRaise
+import sys
+
 import ccalogging
+from ccautils.errors import errorRaise
+
+from ccaaws.botosession import BotoSession
 
 log = ccalogging.log
 
