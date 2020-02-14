@@ -1,11 +1,12 @@
 """ ccaaws ec2 class
 """
 import sys
-from ccaaws import __version__
-from ccaaws.botosession import BotoSession
-from ccautils.errors import errorRaise
+
 from botocore.exceptions import ClientError
 import ccalogging
+from ccautils.errors import errorRaise
+
+from ccaaws.botosession import BotoSession
 
 log = ccalogging.log
 
@@ -34,10 +35,17 @@ class EC2(BotoSession):
                     resp = self.client.describe_instances(**kwargs)
                     try:
                         if "Reservations" in resp:
-                            for r in resp["Reservations"]:
-                                if "Instances" in r:
-                                    for i in r["Instances"]:
-                                        instances.append(i)
+                            rinsts = [
+                                i["Instances"]
+                                for i in [
+                                    r for r in resp["Reservations"] if "Instances" in r
+                                ]
+                            ]
+                            instances += [i for subi in rinsts for i in subi]
+                            # for r in resp["Reservations"]:
+                            #     if "Instances" in r:
+                            #         for i in r["Instances"]:
+                            #             instances.append(i)
                         kwargs["NextToken"] = resp["NextToken"]
                     except KeyError:
                         break
@@ -60,15 +68,22 @@ class EC2(BotoSession):
             instances = []
             kwargs = {}
             if type(instlst) is list:
-                kwargs["Filters"] = [{"Name": "instance-id", "Values": instlst,}]
+                kwargs["Filters"] = [{"Name": "instance-id", "Values": instlst}]
             while True:
                 resp = self.client.describe_instances(**kwargs)
                 try:
                     if "Reservations" in resp:
-                        for r in resp["Reservations"]:
-                            if "Instances" in r:
-                                for i in r["Instances"]:
-                                    instances.append(i)
+                        rinsts = [
+                            i["Instances"]
+                            for i in [
+                                r for r in resp["Reservations"] if "Instances" in r
+                            ]
+                        ]
+                        instances += [i for subi in rinsts for i in subi]
+                        # for r in resp["Reservations"]:
+                        #     if "Instances" in r:
+                        #         for i in r["Instances"]:
+                        #             instances.append(i)
                     kwargs["NextToken"] = resp["NextToken"]
                 except KeyError:
                     break
