@@ -47,3 +47,11 @@ def test_findNonExistantInstance(aws_credentials):
     ec2 = EC2()
     insts = ec2.findInstances(iids)
     assert len(insts) == 0
+
+
+@mock_ec2
+def test_getMatchingInstances(aws_credentials):
+    iids = ["i-33333333333333333", "i-44444444444444444"]
+    ec2 = EC2()
+    insts = ec2.getMatchingInstances(iids)
+    assert len(insts) == 0

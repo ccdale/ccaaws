@@ -97,11 +97,14 @@ class EC2(BotoSession):
         returns a list of all available regions
         """
         try:
-            regions = []
+            # regions = []
             resp = self.client.describe_regions()
-            if "Regions" in resp:
-                for region in resp["Regions"]:
-                    regions.append(region["RegionName"])
+            regions = [
+                region["RegionName"] for region in resp["Regions"] if "Regions" in resp
+            ]
+            # if "Regions" in resp:
+            #     for region in resp["Regions"]:
+            #         regions.append(region["RegionName"])
             log.debug("Regions: {}".format(regions))
             return regions
         except Exception as e:
