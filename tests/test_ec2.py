@@ -24,9 +24,16 @@ def aws_credentials():
 
 
 @mock_ec2
+def test_findNoneExistingInstance(aws_credentials):
+    iid = None
+    ec2 = EC2()
+    insts = ec2.findInstances([iid])
+    assert len(insts) == 0
+
+
+@mock_ec2
 def test_findExistingInstance(aws_credentials):
-    # secadmin-prod sectools-prod-bastion
-    iid = "i-0e0529a38e748906f"
+    iids = ["i-33333333333333333"]
     ec2 = EC2()
     insts = ec2.findInstances([iid])
     assert len(insts) == 0
@@ -34,8 +41,7 @@ def test_findExistingInstance(aws_credentials):
 
 @mock_ec2
 def test_findExistingInstances(aws_credentials):
-    # secadmin-prod sectools-prod-bastion
-    iids = ["i-0e0529a38e748906f", "i-08c2d230b11860b70"]
+    iids = ["i-33333333333333333", "i-44444444444444444"]
     ec2 = EC2()
     insts = ec2.findInstances(iids)
     assert len(insts) == 0
@@ -52,6 +58,14 @@ def test_findNonExistantInstance(aws_credentials):
 @mock_ec2
 def test_getMatchingInstances(aws_credentials):
     iids = ["i-33333333333333333", "i-44444444444444444"]
+    ec2 = EC2()
+    insts = ec2.getMatchingInstances(iids)
+    assert len(insts) == 0
+
+
+@mock_ec2
+def test_getNoMatchingInstances(aws_credentials):
+    iids = None
     ec2 = EC2()
     insts = ec2.getMatchingInstances(iids)
     assert len(insts) == 0

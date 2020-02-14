@@ -27,8 +27,7 @@ class EC2(BotoSession):
         """
         try:
             instances = []
-            kwargs = {}
-            kwargs["InstanceIds"] = instlist
+            kwargs = {"InstanceIds": instlist} if type(instlist) is list else {}
             while True:
                 try:
                     # will raise client error if instances don't exist
@@ -42,10 +41,6 @@ class EC2(BotoSession):
                                 ]
                             ]
                             instances += [i for subi in rinsts for i in subi]
-                            # for r in resp["Reservations"]:
-                            #     if "Instances" in r:
-                            #         for i in r["Instances"]:
-                            #             instances.append(i)
                         kwargs["NextToken"] = resp["NextToken"]
                     except KeyError:
                         break
@@ -80,10 +75,6 @@ class EC2(BotoSession):
                             ]
                         ]
                         instances += [i for subi in rinsts for i in subi]
-                        # for r in resp["Reservations"]:
-                        #     if "Instances" in r:
-                        #         for i in r["Instances"]:
-                        #             instances.append(i)
                     kwargs["NextToken"] = resp["NextToken"]
                 except KeyError:
                     break
@@ -97,14 +88,10 @@ class EC2(BotoSession):
         returns a list of all available regions
         """
         try:
-            # regions = []
             resp = self.client.describe_regions()
             regions = [
                 region["RegionName"] for region in resp["Regions"] if "Regions" in resp
             ]
-            # if "Regions" in resp:
-            #     for region in resp["Regions"]:
-            #         regions.append(region["RegionName"])
             log.debug("Regions: {}".format(regions))
             return regions
         except Exception as e:
