@@ -1,7 +1,9 @@
-import sys
 from datetime import datetime
+import sys
+
 import ccalogging
 from ccautils.errors import errorRaise
+
 from ccaaws.botosession import BotoSession
 
 log = ccalogging.log
@@ -60,11 +62,11 @@ class IamClient(BotoSession):
         try:
             user = self.client.get_user(UserName=self.username)
         except Exception as e:
-            log.error(
-                "IamClient: Failed to retrieve username, are you actually connected?\n{}".format(
-                    e
-                )
-            )
+            msg = f"""IamClient: Failed to retrieve username,
+                are you actually connected
+                {e}
+                """
+            log.error(msg)
             return False
         return user["User"]
 
