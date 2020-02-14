@@ -35,9 +35,15 @@ def tests(session):
         session: the nox session
     """
     args = session.posargs or ["--cov"]
-    # args = session.posargs
     session.run("poetry", "install", "--no-dev", external=True)
     install_with_constraints(session, "coverage[toml]", "pytest", "pytest-cov", "moto")
+    session.run("pytest", *args)
+
+
+@nox.session(python=["3.8"])
+def xtest(session):
+    args = session.posargs or ["--cov"]
+    session.run("poetry", "install", external=True)
     session.run("pytest", *args)
 
 

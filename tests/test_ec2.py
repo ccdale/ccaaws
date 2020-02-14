@@ -55,3 +55,10 @@ def test_getMatchingInstances(aws_credentials):
     ec2 = EC2()
     insts = ec2.getMatchingInstances(iids)
     assert len(insts) == 0
+
+
+@mock_ec2
+def test_getRegions(aws_credentials):
+    ec2 = EC2()
+    regions = ec2.getRegions()
+    assert "eu-west-1" in regions
