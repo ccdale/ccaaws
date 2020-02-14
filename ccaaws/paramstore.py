@@ -4,6 +4,7 @@ AWS SSM Parameter Store client functions
 # import os
 
 import ccalogging
+from typing import Dict
 
 from ccaaws.botosession import BotoSession
 
@@ -12,8 +13,8 @@ log = ccalogging.log
 
 class ParamStore(BotoSession):
 
-    FETCHED_PARAMS = {}
-    FETCHED_PATHS = {}
+    FETCHED_PARAMS: Dict = {}
+    FETCHED_PATHS: Dict = {}
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
