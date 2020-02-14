@@ -1,9 +1,10 @@
 """
 AWS SSM Parameter Store client functions
 """
+# import os
 
-import os
 import ccalogging
+
 from ccaaws.botosession import BotoSession
 
 log = ccalogging.log
@@ -23,7 +24,8 @@ class ParamStore(BotoSession):
         sets the named parameter
         returns the parameter version (how many times it has changed)
         see boto3 doc:
-            http://boto3.readthedocs.io/en/latest/reference/services/ssm.html#SSM.Client.put_parameter
+            http://boto3.readthedocs.io/en/latest/reference/
+            services/ssm.html#SSM.Client.put_parameter
         """
         pversion = None
         try:
@@ -67,7 +69,8 @@ class ParamStore(BotoSession):
         retrieves the named parameter
         returns the parameter value or none if an error occured
         see boto3 doc:
-            http://boto3.readthedocs.io/en/latest/reference/services/ssm.html#SSM.Client.get_parameter
+            http://boto3.readthedocs.io/en/latest/reference/
+            services/ssm.html#SSM.Client.get_parameter
         """
         if pn in self.FETCHED_PARAMS:
             log.info("Returning cached ssm parameter {}".format(pn))
@@ -94,7 +97,7 @@ class ParamStore(BotoSession):
         plist = []
         first = True
         nxt = ""
-        flts = [{"Key": "Path", "Option": "Recursive", "Values": [Path,]}]
+        flts = [{"Key": "Path", "Option": "Recursive", "Values": [Path]}]
         while len(nxt) or first:
             if first:
                 first = False
