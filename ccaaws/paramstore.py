@@ -2,9 +2,9 @@
 AWS SSM Parameter Store client functions
 """
 # import os
+from typing import Dict
 
 import ccalogging
-from typing import Dict
 
 from ccaaws.botosession import BotoSession
 
