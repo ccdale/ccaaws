@@ -1,9 +1,9 @@
 """ tests for ccaaws.ec2
 """
 import os
-import pytest
 
 from moto import mock_ec2
+import pytest
 
 from ccaaws.ec2 import EC2
 
