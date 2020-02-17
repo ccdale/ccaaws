@@ -33,14 +33,13 @@ class EC2(BotoSession):
                     # will raise client error if instances don't exist
                     resp = self.client.describe_instances(**kwargs)
                     try:
-                        if "Reservations" in resp:
-                            rinsts = [
-                                i["Instances"]
-                                for i in [
-                                    r for r in resp["Reservations"] if "Instances" in r
-                                ]
+                        rinsts = [
+                            i["Instances"]
+                            for i in [
+                                r for r in resp["Reservations"] if "Instances" in r
                             ]
-                            instances += [i for subi in rinsts for i in subi]
+                        ]
+                        instances += [i for subi in rinsts for i in subi]
                         kwargs["NextToken"] = resp["NextToken"]
                     except KeyError:
                         break
@@ -67,14 +66,11 @@ class EC2(BotoSession):
             while True:
                 resp = self.client.describe_instances(**kwargs)
                 try:
-                    if "Reservations" in resp:
-                        rinsts = [
-                            i["Instances"]
-                            for i in [
-                                r for r in resp["Reservations"] if "Instances" in r
-                            ]
-                        ]
-                        instances += [i for subi in rinsts for i in subi]
+                    rinsts = [
+                        i["Instances"]
+                        for i in [r for r in resp["Reservations"] if "Instances" in r]
+                    ]
+                    instances += [i for subi in rinsts for i in subi]
                     kwargs["NextToken"] = resp["NextToken"]
                 except KeyError:
                     break
