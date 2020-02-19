@@ -81,6 +81,7 @@ class BotoSession:
             else:
                 session = self.newSession()
                 self.client = session.client(service)
+                self.resource = session.resource(service)
         except Exception as e:
             msg = "Failed to create a {} client. {}: {}".format(
                 service, type(e).__name__, e
