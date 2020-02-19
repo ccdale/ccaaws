@@ -22,8 +22,8 @@ class S3FileSystem(BotoSession):
         self.bucket = None
 
     def xls(self, path, page_size=None):
-        if self.bucket is None:
-            return [None, None]
+        # if self.bucket is None:
+        #     return [None, None]
         paginator = self.client.get_paginator("list_objects")
         paging_args = {
             "Bucket": self.bucket,
