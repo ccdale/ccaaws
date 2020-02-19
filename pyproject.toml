@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ccaaws"
-version = "0.3.2"
+version = "0.3.3"
 description = "AWS boto3 objects for python"
 authors = ["ccdale <chris.charles.allison+ccaaws@gmail.com>"]
 readme = "README.md"
@@ -9,7 +9,7 @@ readme = "README.md"
 python = "^3.6"
 boto3 = "^1.11.5"
 ccalogging = "^0.3.3"
-ccautils = "^0.1.1"
+ccautils = "^0.3.8"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.3.3"
