@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ccaaws"
-version = "0.3.3"
+version = "0.3.4"
 description = "AWS boto3 objects for python"
 authors = ["ccdale <chris.charles.allison+ccaaws@gmail.com>"]
 readme = "README.md"

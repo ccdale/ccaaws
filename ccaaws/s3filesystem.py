@@ -21,9 +21,17 @@ class S3FileSystem(BotoSession):
         self.newClient("s3")
         self.bucket = None
 
+    def getBuckets(self):
+        try:
+            resp = self.client.list_buckets()
+            buckets = resp["Buckets"]
+            return buckets
+        except KeyError as e:
+            log.error(f"Failed to retrieve the bucket list: {e}")
+
     def xls(self, path, page_size=None):
-        # if self.bucket is None:
-        #     return [None, None]
+        if path == "":
+            return [[], []]
         paginator = self.client.get_paginator("list_objects")
         paging_args = {
             "Bucket": self.bucket,
