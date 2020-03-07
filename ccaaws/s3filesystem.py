@@ -1,5 +1,7 @@
 """S3 filesystem object."""
 
+import os
+
 import ccalogging
 
 from ccaaws.botosession import BotoSession

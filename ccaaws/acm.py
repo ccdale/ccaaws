@@ -1,7 +1,9 @@
 import sys
+
 import ccautils.util as UT
-from acmtool.botosession import BotoSession
-from acmtool.errors import errorRaise
+from ccautils.errors import errorRaise
+
+from ccaaws.botosession import BotoSession
 
 
 class ACM(BotoSession):
@@ -35,6 +37,38 @@ class ACM(BotoSession):
             fname = sys._getframe().f_code.co_name
             errorRaise(fname, e)
 
+    def _setupTCert(self, arn, cert):
+        tcert = None
+        isemail = False
+        if len(cert) > 0:
+            # print("{}".format(cert))
+            tcert = {"arn": arn}
+            tcert["inuse"] = []
+            if "InUseBy" in cert:
+                tcert["inuse"] = cert["InUseBy"]
+            if "NotAfter" in cert:
+                tcert["expirests"], tcert["expires"] = UT.fuzzyExpires(cert["NotAfter"])
+            else:
+                tcert["expirests"] = 0
+                tcert["expires"] = ""
+            tcert["domain"] = cert["DomainName"]
+            tcert["altdomains"] = cert["SubjectAlternativeNames"]
+            vopt = []
+            tcert["status"] = "unknown"
+            for opt in cert["DomainValidationOptions"]:
+                tcert["validation"] = opt["ValidationMethod"]
+                if tcert["validation"] == "EMAIL":
+                    isemail = True
+                if "ValidationStatus" in opt:
+                    tcert["status"] = opt["ValidationStatus"]
+                xval = {
+                    "domain": opt["DomainName"],
+                    "validationdomain": opt["ValidationDomain"],
+                }
+                vopt.append(xval)
+            tcert["validations"] = vopt
+        return (isemail, tcert)
+
     def getCerts(self, emailvalidationonly=True):
         try:
             carns = self.getCertList()
@@ -44,37 +78,12 @@ class ACM(BotoSession):
             dcn = 0
             for arn in carns:
                 cert = self.getCertDetails(arn)
-                if len(cert) > 0:
-                    # print("{}".format(cert))
-                    tcert = {"arn": arn}
-                    tcert["inuse"] = []
-                    if "InUseBy" in cert:
-                        tcert["inuse"] = cert["InUseBy"]
-                    if "NotAfter" in cert:
-                        tcert["expirests"], tcert["expires"] = UT.fuzzyExpires(
-                            cert["NotAfter"]
-                        )
+                isemail, tcert = self._setupTCert(arn, cert)
+                if tcert is not None:
+                    if isemail:
+                        ecn += 1
                     else:
-                        tcert["expirests"] = 0
-                        tcert["expires"] = ""
-                    tcert["domain"] = cert["DomainName"]
-                    tcert["altdomains"] = cert["SubjectAlternativeNames"]
-                    vopt = []
-                    tcert["status"] = "unknown"
-                    for opt in cert["DomainValidationOptions"]:
-                        tcert["validation"] = opt["ValidationMethod"]
-                        if tcert["validation"] == "EMAIL":
-                            ecn += 1
-                        else:
-                            dcn += 1
-                        if "ValidationStatus" in opt:
-                            tcert["status"] = opt["ValidationStatus"]
-                        xval = {
-                            "domain": opt["DomainName"],
-                            "validationdomain": opt["ValidationDomain"],
-                        }
-                        vopt.append(xval)
-                    tcert["validations"] = vopt
+                        dcn += 1
                     if emailvalidationonly:
                         if tcert["validation"] == "EMAIL":
                             certs.append(tcert)
