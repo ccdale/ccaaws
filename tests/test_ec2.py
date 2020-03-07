@@ -35,7 +35,7 @@ def test_findNoneExistingInstance(aws_credentials):
 def test_findExistingInstance(aws_credentials):
     iids = ["i-33333333333333333"]
     ec2 = EC2()
-    insts = ec2.findInstances([iid])
+    insts = ec2.findInstances(iids)
     assert len(insts) == 0
 
 

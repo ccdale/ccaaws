@@ -25,7 +25,10 @@ class DynamoDB(BotoSession):
     def getItem(self, item):
         """Item is a dictionary in dynamodb stylee.
 
-        see: https://boto3.readthedocs.io/en/latest/reference/services/dynamodb.html#DynamoDB.Client.get_item
+        see:
+        https://boto3.readthedocs.io/en/latest/
+        reference/services/dynamodb.html#DynamoDB.Client.get_item
+
         i.e.
         item={
           "TableName"='tablename',
@@ -59,7 +62,7 @@ class DynamoDB(BotoSession):
 
     def deleteItem(self, item):
         try:
-            resp = self.client.delete_item(TableName=item["TableName"], Key=item["Key"])
+            self.client.delete_item(TableName=item["TableName"], Key=item["Key"])
             log.info(f"deleted: {item}")
-        except Exception as e:
+        except Exception:
             log.warning(f"Failed to delete {item}")
