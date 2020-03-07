@@ -27,7 +27,7 @@ description = "AWS SAM Translator is a library that transform SAM templates into
 name = "aws-sam-translator"
 optional = false
 python-versions = "*"
-version = "1.20.1"
+version = "1.21.0"
 
 [package.dependencies]
 boto3 = ">=1.5,<2.0"
@@ -80,10 +80,10 @@ description = "The AWS SDK for Python"
 name = "boto3"
 optional = false
 python-versions = "*"
-version = "1.12.2"
+version = "1.12.16"
 
 [package.dependencies]
-botocore = ">=1.15.2,<1.16.0"
+botocore = ">=1.15.16,<1.16.0"
 jmespath = ">=0.7.1,<1.0.0"
 s3transfer = ">=0.3.0,<0.4.0"
 
@@ -93,7 +93,7 @@ description = "Low-level, data-driven core of boto 3."
 name = "botocore"
 optional = false
 python-versions = "*"
-version = "1.15.2"
+version = "1.15.16"
 
 [package.dependencies]
 docutils = ">=0.10,<0.16"
@@ -118,9 +118,10 @@ description = "A set of useful utilities for python programs"
 name = "ccautils"
 optional = false
 python-versions = ">=3.6,<4.0"
-version = "0.3.8"
+version = "0.4.2"
 
 [package.dependencies]
+python-dateutil = ">=2.8.1,<3.0.0"
 toml = ">=0.10.0,<0.11.0"
 
 [[package]]
@@ -144,11 +145,11 @@ pycparser = "*"
 
 [[package]]
 category = "dev"
-description = "checks cloudformation for practices and behaviour         that could potentially be improved"
+description = "Checks CloudFormation templates for practices and behaviour that could potentially be improved"
 name = "cfn-lint"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-version = "0.28.1"
+version = "0.28.3"
 
 [package.dependencies]
 aws-sam-translator = ">=1.19.1"
@@ -345,13 +346,13 @@ version = "0.18.2"
 [[package]]
 category = "dev"
 description = "Git Object Database"
-name = "gitdb2"
+name = "gitdb"
 optional = false
 python-versions = ">=3.4"
-version = "3.0.2"
+version = "4.0.2"
 
 [package.dependencies]
-smmap2 = ">=2.0.0"
+smmap = ">=3.0.1,<4"
 
 [[package]]
 category = "dev"
@@ -359,10 +360,10 @@ description = "Python Git Library"
 name = "gitpython"
 optional = false
 python-versions = ">=3.4"
-version = "3.0.8"
+version = "3.1.0"
 
 [package.dependencies]
-gitdb2 = ">=3"
+gitdb = ">=4.0.1,<5"
 
 [[package]]
 category = "dev"
@@ -417,7 +418,7 @@ description = "JSON Matching Expressions"
 name = "jmespath"
 optional = false
 python-versions = "*"
-version = "0.9.4"
+version = "0.9.5"
 
 [[package]]
 category = "dev"
@@ -579,7 +580,7 @@ description = "Core utilities for Python packages"
 name = "packaging"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-version = "20.1"
+version = "20.3"
 
 [package.dependencies]
 pyparsing = ">=2.0.2"
@@ -639,7 +640,7 @@ description = "C parser in Python"
 name = "pycparser"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-version = "2.19"
+version = "2.20"
 
 [[package]]
 category = "dev"
@@ -782,16 +783,16 @@ description = "Python HTTP for Humans."
 name = "requests"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
-version = "2.22.0"
+version = "2.23.0"
 
 [package.dependencies]
 certifi = ">=2017.4.17"
-chardet = ">=3.0.2,<3.1.0"
-idna = ">=2.5,<2.9"
+chardet = ">=3.0.2,<4"
+idna = ">=2.5,<3"
 urllib3 = ">=1.21.1,<1.25.0 || >1.25.0,<1.25.1 || >1.25.1,<1.26"
 
 [package.extras]
-security = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)", "idna (>=2.0.0)"]
+security = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)"]
 socks = ["PySocks (>=1.5.6,<1.5.7 || >1.5.7)", "win-inet-pton"]
 
 [[package]]
@@ -800,7 +801,7 @@ description = "A utility library for mocking out the `requests` Python library."
 name = "responses"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-version = "0.10.9"
+version = "0.10.12"
 
 [package.dependencies]
 requests = ">=2.0"
@@ -857,10 +858,10 @@ version = "1.14.0"
 [[package]]
 category = "dev"
 description = "A pure Python implementation of a sliding window memory map manager"
-name = "smmap2"
+name = "smmap"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-version = "2.0.5"
+version = "3.0.1"
 
 [[package]]
 category = "dev"
@@ -980,14 +981,14 @@ marker = "python_version < \"3.8\""
 name = "zipp"
 optional = false
 python-versions = ">=3.6"
-version = "3.0.0"
+version = "3.1.0"
 
 [package.extras]
 docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "089a7fb5f0a9e0d22016936bbd01add014b2880dcb8d2a889bfbeec927779ad3"
+content-hash = "160aca92f0cce88fd7bc8d4ee06ff74e757b2982f2f39482bb13f5628af26858"
 python-versions = "^3.6"
 
 [metadata.files]
@@ -1000,7 +1001,7 @@ attrs = [
     {file = "attrs-19.3.0.tar.gz", hash = "sha256:f7b7ce16570fe9965acd6d30101a28f62fb4a7f9e926b3bbc9b61f8b04247e72"},
 ]
 aws-sam-translator = [
-    {file = "aws-sam-translator-1.20.1.tar.gz", hash = "sha256:ddf61fdabc94a66ca0a3e7d042d6a0e508bc45bd128c86fb02af0c87a59ac79e"},
+    {file = "aws-sam-translator-1.21.0.tar.gz", hash = "sha256:320a341d659580ad04e79c46fc93f50996363745a0c2728f9cd025ad78c43e36"},
 ]
 aws-xray-sdk = [
     {file = "aws-xray-sdk-2.4.3.tar.gz", hash = "sha256:263a38f3920d9dc625e3acb92e6f6d300f4250b70f538bd009ce6e485676ab74"},
@@ -1015,20 +1016,20 @@ boto = [
     {file = "boto-2.49.0.tar.gz", hash = "sha256:ea0d3b40a2d852767be77ca343b58a9e3a4b00d9db440efb8da74b4e58025e5a"},
 ]
 boto3 = [
-    {file = "boto3-1.12.2-py2.py3-none-any.whl", hash = "sha256:967c7a5ac484fe627706e241dfc9294a6220c863ceb53a4f34e3fe9e11a71d7a"},
-    {file = "boto3-1.12.2.tar.gz", hash = "sha256:68e32e2d1c911b0e8408278c7603f0f46c31780b46c44d23346ccef71b3f10dc"},
+    {file = "boto3-1.12.16-py2.py3-none-any.whl", hash = "sha256:a01e3a373638850822c863914fa56e25fd1a651a48fb9c6323694a634c76289c"},
+    {file = "boto3-1.12.16.tar.gz", hash = "sha256:ba1229df5f1e32dee4c8bb73e774dfb7d54e293f0895d4f825294e2d46e3c7b3"},
 ]
 botocore = [
-    {file = "botocore-1.15.2-py2.py3-none-any.whl", hash = "sha256:5ffdf30746dbfca59d31d2059789168255e96bd98a17a65f8edb3b6de0a96b3e"},
-    {file = "botocore-1.15.2.tar.gz", hash = "sha256:00bff61d899c4f12abe020527452e08cf49b3b60400c5d0d9f83c00b7d18c642"},
+    {file = "botocore-1.15.16-py2.py3-none-any.whl", hash = "sha256:1109f36e658de2097d1e466842d6634a6b66bb9d3779abe16698171360e1ae5f"},
+    {file = "botocore-1.15.16.tar.gz", hash = "sha256:39e903e1d1ae862e469b4d5f15dc6770a7c9c81da9fcffb1a40f551ea36acd35"},
 ]
 ccalogging = [
     {file = "ccalogging-0.3.3-py3-none-any.whl", hash = "sha256:8ecc79d6198f78fa1a05b56b47ae7cad997c87c8ed1470a6d47920823fd6704b"},
     {file = "ccalogging-0.3.3.tar.gz", hash = "sha256:c7a5338f1b783afec97fb187ded577ffc39c9e01ddaa68f7faf26b60744a71ac"},
 ]
 ccautils = [
-    {file = "ccautils-0.3.8-py3-none-any.whl", hash = "sha256:70d46d52daee7e7493f233f7b57407dec99219ffbbaf0178e6c2a8dfc26391f7"},
-    {file = "ccautils-0.3.8.tar.gz", hash = "sha256:b5da537deb1b31bfe3e64d427b220131ce10cb0281b7f54a3032432c309f3255"},
+    {file = "ccautils-0.4.2-py3-none-any.whl", hash = "sha256:d2a88c3122bab91ac055b35bfae89f6ac226a3796ad00f79a0a6d4a69cfce126"},
+    {file = "ccautils-0.4.2.tar.gz", hash = "sha256:f0b1beb3c7d74a75ad89591e96ce20c67fe5775c9433725837e2f54221630a40"},
 ]
 certifi = [
     {file = "certifi-2019.11.28-py2.py3-none-any.whl", hash = "sha256:017c25db2a153ce562900032d5bc68e9f191e44e9a0f762f373977de9df1fbb3"},
@@ -1065,8 +1066,8 @@ cffi = [
     {file = "cffi-1.14.0.tar.gz", hash = "sha256:2d384f4a127a15ba701207f7639d94106693b6cd64173d6c8988e2c25f3ac2b6"},
 ]
 cfn-lint = [
-    {file = "cfn-lint-0.28.1.tar.gz", hash = "sha256:017cfbe7f78a534114ed1bf45b438bdfd2eb735c4d428e35f478a1ca46953773"},
-    {file = "cfn_lint-0.28.1-py3-none-any.whl", hash = "sha256:1eaac38d8d48014ade3dc33824eab756d24f51f222157f30e76ccffe35824dcb"},
+    {file = "cfn-lint-0.28.3.tar.gz", hash = "sha256:e7d93eac5dd20eb9012bf33eef8d2ac6124dab3dfd408b46ffe7d6c9b0f8426f"},
+    {file = "cfn_lint-0.28.3-py3-none-any.whl", hash = "sha256:0e40e56c2b5b06d248f8ae6464ec55d671cbcd9bc8fb68694dbd42a29cb07fc7"},
 ]
 chardet = [
     {file = "chardet-3.0.4-py2.py3-none-any.whl", hash = "sha256:fc323ffcaeaed0e0a02bf4d117757b98aed530d9ed4531e3e15460124c106691"},
@@ -1171,13 +1172,13 @@ flake8-polyfill = [
 future = [
     {file = "future-0.18.2.tar.gz", hash = "sha256:b1bead90b70cf6ec3f0710ae53a525360fa360d306a86583adc6bf83a4db537d"},
 ]
-gitdb2 = [
-    {file = "gitdb2-3.0.2-py2.py3-none-any.whl", hash = "sha256:b2b3a67090c17dc61f8407ca485e79ae811225ab5ebcd98ac5ee01448e8987b5"},
-    {file = "gitdb2-3.0.2.tar.gz", hash = "sha256:0375d983fd887d03c8942e81b1b0abc6c320cfb500cd3fe0d9c0eac87fbf2b52"},
+gitdb = [
+    {file = "gitdb-4.0.2-py3-none-any.whl", hash = "sha256:284a6a4554f954d6e737cddcff946404393e030b76a282c6640df8efd6b3da5e"},
+    {file = "gitdb-4.0.2.tar.gz", hash = "sha256:598e0096bb3175a0aab3a0b5aedaa18a9a25c6707e0eca0695ba1a0baf1b2150"},
 ]
 gitpython = [
-    {file = "GitPython-3.0.8-py3-none-any.whl", hash = "sha256:a43a5d88a5bbc3cf32bb5223e4b4e68fd716db5e9996cad6e561bbfee6e5f4af"},
-    {file = "GitPython-3.0.8.tar.gz", hash = "sha256:620b3c729bbc143b498cfea77e302999deedc55faec5b1067086c9ef90e101bc"},
+    {file = "GitPython-3.1.0-py3-none-any.whl", hash = "sha256:43da89427bdf18bf07f1164c6d415750693b4d50e28fc9b68de706245147b9dd"},
+    {file = "GitPython-3.1.0.tar.gz", hash = "sha256:e426c3b587bd58c482f0b7fe6145ff4ac7ae6c82673fc656f489719abca6f4cb"},
 ]
 idna = [
     {file = "idna-2.8-py2.py3-none-any.whl", hash = "sha256:ea8b7f6188e6fa117537c3df7da9fc686d485087abf6ac197f9c46432f7e4a3c"},
@@ -1196,8 +1197,8 @@ jinja2 = [
     {file = "Jinja2-2.11.1.tar.gz", hash = "sha256:93187ffbc7808079673ef52771baa950426fd664d3aad1d0fa3e95644360e250"},
 ]
 jmespath = [
-    {file = "jmespath-0.9.4-py2.py3-none-any.whl", hash = "sha256:3720a4b1bd659dd2eecad0666459b9788813e032b83e7ba58578e48254e0a0e6"},
-    {file = "jmespath-0.9.4.tar.gz", hash = "sha256:bde2aef6f44302dfb30320115b17d030798de8c4110e28d5cf6cf91a7a31074c"},
+    {file = "jmespath-0.9.5-py2.py3-none-any.whl", hash = "sha256:695cb76fa78a10663425d5b73ddc5714eb711157e52704d69be03b1a02ba4fec"},
+    {file = "jmespath-0.9.5.tar.gz", hash = "sha256:cca55c8d153173e21baa59983015ad0daf603f9cb799904ff057bfb8ff8dc2d9"},
 ]
 jsondiff = [
     {file = "jsondiff-1.1.2.tar.gz", hash = "sha256:7e18138aecaa4a8f3b7ac7525b8466234e6378dd6cae702b982c9ed851d2ae21"},
@@ -1290,8 +1291,8 @@ mypy-extensions = [
     {file = "mypy_extensions-0.4.3.tar.gz", hash = "sha256:2d82818f5bb3e369420cb3c4060a7970edba416647068eb4c5343488a6c604a8"},
 ]
 packaging = [
-    {file = "packaging-20.1-py2.py3-none-any.whl", hash = "sha256:170748228214b70b672c581a3dd610ee51f733018650740e98c7df862a583f73"},
-    {file = "packaging-20.1.tar.gz", hash = "sha256:e665345f9eef0c621aa0bf2f8d78cf6d21904eef16a93f020240b704a57f1334"},
+    {file = "packaging-20.3-py2.py3-none-any.whl", hash = "sha256:82f77b9bee21c1bafbf35a84905d604d5d1223801d639cf3ed140bd651c08752"},
+    {file = "packaging-20.3.tar.gz", hash = "sha256:3c292b474fda1671ec57d46d739d072bfd495a4f51ad01a055121d81e952b7a3"},
 ]
 pbr = [
     {file = "pbr-5.4.4-py2.py3-none-any.whl", hash = "sha256:61aa52a0f18b71c5cc58232d2cf8f8d09cd67fcad60b742a60124cb8d6951488"},
@@ -1325,7 +1326,8 @@ pycodestyle = [
     {file = "pycodestyle-2.5.0.tar.gz", hash = "sha256:e40a936c9a450ad81df37f549d676d127b1b66000a6c500caa2b085bc0ca976c"},
 ]
 pycparser = [
-    {file = "pycparser-2.19.tar.gz", hash = "sha256:a988718abfad80b6b157acce7bf130a30876d27603738ac39f140993246b25b3"},
+    {file = "pycparser-2.20-py2.py3-none-any.whl", hash = "sha256:7582ad22678f0fcd81102833f60ef8d0e57288b6b5fb00323d101be910e35705"},
+    {file = "pycparser-2.20.tar.gz", hash = "sha256:2d475327684562c3a96cc71adf7dc8c4f0565175cf86b6d7a404ff4c771f15f0"},
 ]
 pyflakes = [
     {file = "pyflakes-2.1.1-py2.py3-none-any.whl", hash = "sha256:17dbeb2e3f4d772725c777fabc446d5634d1038f234e77343108ce445ea69ce0"},
@@ -1390,12 +1392,12 @@ pyyaml = [
     {file = "PyYAML-5.3.tar.gz", hash = "sha256:e9f45bd5b92c7974e59bcd2dcc8631a6b6cc380a904725fce7bc08872e691615"},
 ]
 requests = [
-    {file = "requests-2.22.0-py2.py3-none-any.whl", hash = "sha256:9cf5292fcd0f598c671cfc1e0d7d1a7f13bb8085e9a590f48c010551dc6c4b31"},
-    {file = "requests-2.22.0.tar.gz", hash = "sha256:11e007a8a2aa0323f5a921e9e6a2d7e4e67d9877e85773fba9ba6419025cbeb4"},
+    {file = "requests-2.23.0-py2.py3-none-any.whl", hash = "sha256:43999036bfa82904b6af1d99e4882b560e5e2c68e5c4b0aa03b655f3d7d73fee"},
+    {file = "requests-2.23.0.tar.gz", hash = "sha256:b3f43d496c6daba4493e7c431722aeb7dbc6288f52a6e04e7b6023b0247817e6"},
 ]
 responses = [
-    {file = "responses-0.10.9-py2.py3-none-any.whl", hash = "sha256:515fd7c024097e5da76e9c4cf719083d181f1c3ddc09c2e0e49284ce863dd263"},
-    {file = "responses-0.10.9.tar.gz", hash = "sha256:8ce8cb4e7e1ad89336f8865af152e0563d2e7f0e0b86d2cf75f015f819409243"},
+    {file = "responses-0.10.12-py2.py3-none-any.whl", hash = "sha256:0474ce3c897fbcc1aef286117c93499882d5c440f06a805947e4b1cb5ab3d474"},
+    {file = "responses-0.10.12.tar.gz", hash = "sha256:f83613479a021e233e82d52ffb3e2e0e2836d24b0cc88a0fa31978789f78d0e5"},
 ]
 rsa = [
     {file = "rsa-4.0-py2.py3-none-any.whl", hash = "sha256:14ba45700ff1ec9eeb206a2ce76b32814958a98e372006c8fb76ba820211be66"},
@@ -1413,9 +1415,9 @@ six = [
     {file = "six-1.14.0-py2.py3-none-any.whl", hash = "sha256:8f3cd2e254d8f793e7f3d6d9df77b92252b52637291d0f0da013c76ea2724b6c"},
     {file = "six-1.14.0.tar.gz", hash = "sha256:236bdbdce46e6e6a3d61a337c0f8b763ca1e8717c03b369e87a7ec7ce1319c0a"},
 ]
-smmap2 = [
-    {file = "smmap2-2.0.5-py2.py3-none-any.whl", hash = "sha256:0555a7bf4df71d1ef4218e4807bbf9b201f910174e6e08af2e138d4e517b4dde"},
-    {file = "smmap2-2.0.5.tar.gz", hash = "sha256:29a9ffa0497e7f2be94ca0ed1ca1aa3cd4cf25a1f6b4f5f87f74b46ed91d609a"},
+smmap = [
+    {file = "smmap-3.0.1-py2.py3-none-any.whl", hash = "sha256:5fead614cf2de17ee0707a8c6a5f2aa5a2fc6c698c70993ba42f515485ffda78"},
+    {file = "smmap-3.0.1.tar.gz", hash = "sha256:171484fe62793e3626c8b05dd752eb2ca01854b0c55a1efc0dc4210fccb65446"},
 ]
 sshpubkeys = [
     {file = "sshpubkeys-3.1.0-py2.py3-none-any.whl", hash = "sha256:9f73d51c2ef1e68cd7bde0825df29b3c6ec89f4ce24ebca3bf9eaa4a23a284db"},
@@ -1482,6 +1484,6 @@ xmltodict = [
     {file = "xmltodict-0.12.0.tar.gz", hash = "sha256:50d8c638ed7ecb88d90561beedbf720c9b4e851a9fa6c47ebd64e99d166d8a21"},
 ]
 zipp = [
-    {file = "zipp-3.0.0-py3-none-any.whl", hash = "sha256:12248a63bbdf7548f89cb4c7cda4681e537031eda29c02ea29674bc6854460c2"},
-    {file = "zipp-3.0.0.tar.gz", hash = "sha256:7c0f8e91abc0dc07a5068f315c52cb30c66bfbc581e5b50704c8a2f6ebae794a"},
+    {file = "zipp-3.1.0-py3-none-any.whl", hash = "sha256:aa36550ff0c0b7ef7fa639055d797116ee891440eac1a56f378e2d3179e0320b"},
+    {file = "zipp-3.1.0.tar.gz", hash = "sha256:c599e4d75c98f6798c509911d08a22e6c021d074469042177c8c86fb92eefd96"},
 ]
