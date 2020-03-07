@@ -1,7 +1,7 @@
 import sys
 
-import ccautils.util as UT
 from ccautils.errors import errorRaise
+import ccautils.util as UT
 
 from ccaaws.botosession import BotoSession
 
