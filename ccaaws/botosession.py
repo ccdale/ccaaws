@@ -31,11 +31,15 @@ class BotoSession:
             AWS_SESSION_TOKEN
         """
         self.client = None
+        self.noresource = False
         self.profile = None
         self.region = None
         self.usekeys = False
         self.kwargs = None
         self.usedefault = True
+        if "noresource" in kwargs:
+            self.noresource = True
+            del kwargs["noresource"]
         if "region" in kwargs:
             self.region = kwargs["region"]
             del kwargs["region"]
@@ -81,7 +85,8 @@ class BotoSession:
             else:
                 session = self.newSession()
                 self.client = session.client(service)
-                self.resource = session.resource(service)
+                if not self.noresource:
+                    self.resource = session.resource(service)
         except Exception as e:
             msg = "Failed to create a {} client. {}: {}".format(
                 service, type(e).__name__, e

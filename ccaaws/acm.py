@@ -9,6 +9,10 @@ from ccaaws.botosession import BotoSession
 class ACM(BotoSession):
     def __init__(self, **kwargs):
         try:
+            if kwargs is None:
+                kwargs = {"noresource": True}
+            else:
+                kwargs["noresource"] = True
             super().__init__(**kwargs)
             self.newClient("acm")
         except Exception as e:
