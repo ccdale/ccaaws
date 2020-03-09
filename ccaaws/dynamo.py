@@ -12,6 +12,7 @@ class DynamoDB(BotoSession):
     LCACHE = []
 
     def __init__(self, **kwargs):
+        self.dolcache = False
         if kwargs is not None and "LambdaCache" in kwargs:
             self.dolcache = kwargs["LambdaCache"]
             del kwargs["LambdaCache"]
