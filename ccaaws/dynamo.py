@@ -13,13 +13,13 @@ class DynamoDB(BotoSession):
 
     def __init__(self, **kwargs):
         if kwargs is not None and "LambdaCache" in kwargs:
-            self.lcache = kwargs["LambdaCache"]
+            self.dolcache = kwargs["LambdaCache"]
             del kwargs["LambdaCache"]
         super().__init__(**kwargs)
         self.newClient("dynamodb")
 
     def getAll(self, table):
-        if self.lcache and len(self.LCACHE) > 0:
+        if self.dolcache and len(self.LCACHE) > 0:
             return self.LCACHE
         resp = self.client.scan(TableName=table)
         data = resp["Items"]
@@ -28,6 +28,8 @@ class DynamoDB(BotoSession):
                 TableName=table, ExclusiveStartKey=resp["LastEvaluatedKey"]
             )
             data.extend(resp["Items"])
+        if self.dolcache:
+            self.LCACHE = data
         return data
 
     def getItem(self, item):
