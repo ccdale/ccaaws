@@ -8,11 +8,19 @@ log = ccalogging.log
 
 
 class DynamoDB(BotoSession):
+
+    LCACHE = []
+
     def __init__(self, **kwargs):
+        if kwargs is not None and "LambdaCache" in kwargs:
+            self.lcache = kwargs["LambdaCache"]
+            del kwargs["LambdaCache"]
         super().__init__(**kwargs)
         self.newClient("dynamodb")
 
     def getAll(self, table):
+        if self.lcache and len(self.LCACHE) > 0:
+            return self.LCACHE
         resp = self.client.scan(TableName=table)
         data = resp["Items"]
         while resp.get("LastEvaluatedKey"):
