@@ -61,17 +61,20 @@ class ACM(BotoSession):
             tcert["status"] = "unknown"
             for opt in cert["DomainValidationOptions"]:
                 tcert["validation"] = None
-                if "ValidationMethod" in opt:
-                    tcert["validation"] = opt["ValidationMethod"]
-                if tcert["validation"] == "EMAIL":
-                    isemail = True
-                if "ValidationStatus" in opt:
-                    tcert["status"] = opt["ValidationStatus"]
-                xval = {
-                    "domain": opt["DomainName"],
-                    "validationdomain": opt["ValidationDomain"],
-                }
-                vopt.append(xval)
+                try:
+                    if "ValidationMethod" in opt:
+                        tcert["validation"] = opt["ValidationMethod"]
+                    if tcert["validation"] == "EMAIL":
+                        isemail = True
+                    if "ValidationStatus" in opt:
+                        tcert["status"] = opt["ValidationStatus"]
+                    xval = {
+                        "domain": opt["DomainName"],
+                        "validationdomain": opt["ValidationDomain"],
+                    }
+                    vopt.append(xval)
+                except KeyError:
+                    continue
             tcert["validations"] = vopt
         return (isemail, tcert)
 
