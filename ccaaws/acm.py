@@ -60,7 +60,9 @@ class ACM(BotoSession):
             vopt = []
             tcert["status"] = "unknown"
             for opt in cert["DomainValidationOptions"]:
-                tcert["validation"] = opt["ValidationMethod"]
+                tcert["validation"] = None
+                if "ValidationMethod" in opt:
+                    tcert["validation"] = opt["ValidationMethod"]
                 if tcert["validation"] == "EMAIL":
                     isemail = True
                 if "ValidationStatus" in opt:
