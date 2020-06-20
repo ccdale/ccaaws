@@ -61,6 +61,7 @@ class IamClient(BotoSession):
         """
         try:
             user = self.client.get_user(UserName=self.username)
+            user["passwordage"] = self._getPasswordAge()
         except Exception as e:
             msg = f"""IamClient: Failed to retrieve username,
                 are you actually connected
@@ -70,12 +71,36 @@ class IamClient(BotoSession):
             return False
         return user["User"]
 
+    def _getPasswordAge(self):
+        """ returns the date the console password was last set
+
+        is intended not to be called standalone, but as an addition to the
+        _getUser() method above
+        """
+        try:
+            passwordage = None
+            lp = self.client.get_login_profile(UserName=self.username)
+            if lp is not None:
+                if "LoginProfile" in lp:
+                    passwordage = lp["LoginProfile"]["CreateDate"]
+        except ClientError as e:
+            # if user doesn't have a console pasword
+            # boto raises a ClientError Exception
+            pass
+        except Exception as e:
+            fname = sys._getframe().f_code.co_name
+            errorRaise(fname, e)
+        finally:
+            return passwordage
+
     def getKeys(self, user):
         """returns a user dict complete with registered access keys"""
         # user = self._getUser()
         log.debug("user: {}".format(user))
         if user is not False:
             self.user = user
+            self.username = self.user["UserName"]
+            self.user["passwordage"] = self._getPasswordAge()
             try:
                 keys = self.client.list_access_keys(UserName=self.user["UserName"])
                 log.debug("keys: {}".format(keys))
