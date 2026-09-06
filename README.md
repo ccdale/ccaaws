@@ -50,6 +50,82 @@ sts_client = ccaaws.assumeRoleClient(
   built from the resulting temporary credentials. Extra `kwargs` are passed
   through to `Session.client()`.
 
+## Thread safety (AWS Lambda usage)
+
+boto3 sessions are **not** thread-safe: a `boto3.Session` (and anything created
+from it, like credential resolution state) must not be shared across threads.
+boto3 clients created from a session, however, **are** thread-safe and can be
+shared and reused across threads once created.
+
+This matters for Lambda functions that use threads (for example, to fan out
+concurrent I/O within a single invocation): create one `session()` per thread,
+but a `client()` built from that session can be handed to, or shared with,
+other threads that need to call the same service.
+
+Recommended patterns for Lambda:
+
+- **Single-threaded handler (the common case)**: create the session and
+  client(s) once at module scope, outside the handler function, so they are
+  reused across warm invocations of the same execution environment.
+
+  ```python
+  import ccaaws
+
+  # module scope - created once per execution environment, reused across
+  # warm invocations
+  s3 = ccaaws.client("s3")
+
+  def handler(event, context):
+      return s3.list_buckets()
+  ```
+
+- **Multi-threaded handler**: create a separate `session()` per thread (for
+  example, in the thread's target function or via thread-local storage).
+  Clients built from those sessions can then be shared across threads if
+  needed, since clients are thread-safe.
+
+  ```python
+  import threading
+
+  import ccaaws
+
+  threadLocal = threading.local()
+
+
+  def getClient():
+      if not hasattr(threadLocal, "s3"):
+          sess = ccaaws.session()
+          threadLocal.s3 = ccaaws.client("s3", sess=sess)
+      return threadLocal.s3
+  ```
+
+- **`concurrent.futures.ThreadPoolExecutor`**: the cleaner, more modern way
+  to fan out work across threads. Since a worker function may run on any
+  thread in the pool, each call must create its own `session()`; `threading`
+  primitives (locks, thread-local storage) are still useful when workers need
+  to share or protect other state.
+
+  ```python
+  from concurrent.futures import ThreadPoolExecutor
+
+  import ccaaws
+
+
+  def fetchBucketTags(bucketName: str) -> dict:
+      # one session per call, since this runs on a pool thread
+      s3 = ccaaws.client("s3", sess=ccaaws.session())
+      return s3.get_bucket_tagging(Bucket=bucketName)
+
+
+  def handler(event, context):
+      bucketNames = event["bucketNames"]
+      with ThreadPoolExecutor(max_workers=len(bucketNames)) as pool:
+          return list(pool.map(fetchBucketTags, bucketNames))
+  ```
+
+Do not store a `session()` on a module-level variable and then use it from
+multiple threads; create one session per thread instead.
+
 ## Development
 
 ```bash
