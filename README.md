@@ -33,6 +33,32 @@ sts_client = ccaaws.assumeRoleClient(
     profile="myprofile",
     region="eu-west-1",
 )
+
+# a session built from temporary assumed-role credentials, for creating
+# many different clients from the same assumed role
+assumedSess = ccaaws.assumeRoleSession(
+    "arn:aws:iam::123456789012:role/myrole",
+    "mysession",
+)
+s3 = ccaaws.client("s3", sess=assumedSess)
+ec2 = ccaaws.client("ec2", sess=assumedSess)
+
+# which AWS account the current (or assumed) session's credentials belong to
+accountId = ccaaws.getAccountId(sess=assumedSess)
+
+# read a parameter (or SecureString secret) from SSM Parameter Store
+value = ccaaws.getParameter("/my/param")
+
+# read a secret from Secrets Manager
+secret = ccaaws.getSecret("mySecretId")
+
+# read/write a python dict as a JSON object in S3
+data = ccaaws.s3GetJson("mybucket", "mykey.json")
+ccaaws.s3PutJson("mybucket", "mykey.json", data)
+
+# yield every item across all pages of a paginated client call
+for bucket in ccaaws.paginate(s3, "list_buckets", "Buckets"):
+    print(bucket["Name"])
 ```
 
 ## API
@@ -49,6 +75,36 @@ sts_client = ccaaws.assumeRoleClient(
   Calls STS `AssumeRole` for `role_arn` and returns a client for `service_name`
   built from the resulting temporary credentials. Extra `kwargs` are passed
   through to `Session.client()`.
+
+- `assumeRoleSession(role_arn, role_session_name, sess=None, profile=None, region=None, duration_seconds=3600) -> boto3.Session`
+  Calls STS `AssumeRole` for `role_arn` and returns a `boto3.Session` built
+  from the resulting temporary credentials. Use this instead of
+  `assumeRoleClient` when many different clients need to be created from the
+  same assumed role.
+
+- `getAccountId(sess=None, profile=None, region=None) -> str`
+  Returns the AWS account id that the given (or newly created) session's
+  credentials belong to. Useful when working with multiple assumed roles
+  to know which account you are currently in.
+
+- `getParameter(name, sess=None, profile=None, region=None, withDecryption=True, **kwargs) -> str`
+  Reads a parameter (including `SecureString` secrets) from SSM Parameter
+  Store and returns its value.
+
+- `getSecret(secretId, sess=None, profile=None, region=None, **kwargs) -> str`
+  Reads a secret value from AWS Secrets Manager.
+
+- `s3GetJson(bucket, key, sess=None, profile=None, region=None, **kwargs) -> Any`
+  Reads an S3 object and parses its body as JSON, returning a python object
+  (typically a `dict`).
+
+- `s3PutJson(bucket, key, data, sess=None, profile=None, region=None, **kwargs) -> Any`
+  Writes a python object to S3, encoded as JSON.
+
+- `paginate(client, operationName, resultKey, **kwargs) -> Iterator[Any]`
+  Universal pagination helper: yields every item under `resultKey` across
+  all pages of the paginated `operationName` call on `client`, passing
+  `kwargs` through to `paginate()`.
 
 ## Thread safety (AWS Lambda usage)
 
