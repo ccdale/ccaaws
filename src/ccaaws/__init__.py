@@ -1,35 +1,13 @@
-import subprocess
-import tomllib
-from pathlib import Path
+from importlib.metadata import PackageNotFoundError, version as _packageVersion
 
 from ccaaws.session import assumeRoleClient, client, session
 
 
-def gitRoot() -> str:
-    """Get the root directory of the current git repository."""
-    try:
-        return (
-            subprocess.check_output(["git", "rev-parse", "--show-toplevel"], text=True)
-            .splitlines()
-            .pop()
-        )
-    except (subprocess.CalledProcessError, OSError):
-        return ""
-
-
 def getVersion() -> str:
-    """Get the version of the project from pyproject.toml."""
-    root = gitRoot()
-    if not root:
-        return "0.0.0"
-    pyprojectPath = Path(root) / "pyproject.toml"
-    if not pyprojectPath.exists():
-        return "0.0.0"
+    """Get the installed version of this package."""
     try:
-        with open(pyprojectPath, "rb") as f:
-            pyprojectData = tomllib.load(f)
-        return pyprojectData.get("project", {}).get("version", "0.0.0")
-    except (OSError, tomllib.TOMLDecodeError):
+        return _packageVersion("ccaaws")
+    except PackageNotFoundError:
         return "0.0.0"
 
 
